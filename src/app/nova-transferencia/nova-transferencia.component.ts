@@ -1,6 +1,7 @@
 import { Transferencia } from './../models/transferencia.model';
 import { TransferenciaService } from './../services/transferencia.service';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nova-transferencia',
@@ -11,7 +12,10 @@ export class NovaTransferenciaComponent {
   valor: number;
   destino: string;
 
-  constructor(private readonly service: TransferenciaService) {}
+  constructor(
+    private readonly service: TransferenciaService,
+    private readonly router: Router
+  ) {}
 
   async transferir(): Promise<void> {
     const transferencia: Transferencia = {
@@ -20,14 +24,9 @@ export class NovaTransferenciaComponent {
     };
     this.service.create(transferencia).subscribe({
       next: (_transferencia) => {
-        this.limparValores();
+        this.router.navigateByUrl('extrato');
       },
       error: (error) => console.log(error),
     });
-  }
-
-  async limparValores(): Promise<void> {
-    this.valor = undefined;
-    this.destino = undefined;
   }
 }
